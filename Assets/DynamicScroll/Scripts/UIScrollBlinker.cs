@@ -5,14 +5,14 @@ public class UIScrollBlinker : MonoBehaviour
 {
 	public UIPanel scrollPanel;
 
-	private bool firstTime;
+	private bool firstTime = true;
 
 	void Start()
 	{
 		if (scrollPanel != null)
 			scrollPanel.onClipMove = this.OnMove;
 		
-		firstTime = true;
+		firstTime = false;
 		Blink();
 	}
 	
