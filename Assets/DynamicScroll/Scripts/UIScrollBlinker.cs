@@ -3,42 +3,34 @@ using System.Collections;
 
 public class UIScrollBlinker : MonoBehaviour
 {
-	public UIPanel scrollPanel;
+	public UIScrollView scrollView;
 
 	private bool firstTime = true;
 
 	void Start()
 	{
-		if (scrollPanel != null)
-			scrollPanel.onClipMove = this.OnMove;
-		
 		firstTime = false;
 		Blink();
 	}
-	
+
+	void Update()
+	{
+		if (scrollView.currentMomentum.magnitude > 0f)
+			Blink();
+	}
+
 	void OnEnable()
 	{
 		if (firstTime == false)
-		{
-			if (scrollPanel == null)
-				return;
-
-			scrollPanel.onClipMove = this.OnMove;
 			Blink();
-		}
-	}
-
-	protected void OnMove(UIPanel panel)
-	{
-		Blink();
 	}
 
 	public void Blink()
 	{
-		if (scrollPanel == null)
+		if (scrollView.panel == null)
 			return;
 
-		Vector3[] corners = scrollPanel.worldCorners;
+		Vector3[] corners = scrollView.panel.worldCorners;
 		
 		for (int i=0; i<4; i++)
 		{
@@ -59,8 +51,8 @@ public class UIScrollBlinker : MonoBehaviour
 			float maxX = corners[2].x + b.extents.x;
 			float maxY = corners[2].y + b.extents.y;
 
-			float distanceX = t.localPosition.x - center.x + scrollPanel.clipOffset.x - transform.localPosition.x;
-			float distanceY = t.localPosition.y - center.y + scrollPanel.clipOffset.y - transform.localPosition.y;
+			float distanceX = t.localPosition.x - center.x + scrollView.panel.clipOffset.x - transform.localPosition.x;
+			float distanceY = t.localPosition.y - center.y + scrollView.panel.clipOffset.y - transform.localPosition.y;
 
 			bool active = (distanceX > minX && distanceX < maxX) && (distanceY > minY && distanceY < maxY);
 			NGUITools.SetActive(t.gameObject, active, false);
