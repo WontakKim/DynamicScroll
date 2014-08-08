@@ -9,13 +9,16 @@ public class UIScrollBlinker : MonoBehaviour
 
 	void Start()
 	{
-		firstTime = false;
+		scrollView = NGUITools.FindInParents<UIScrollView>(gameObject);
 		Blink();
+
+		firstTime = false;
 	}
 
 	void Update()
 	{
-		if (scrollView.currentMomentum.magnitude > 0f)
+		SpringPanel sp = scrollView.gameObject.GetComponent<SpringPanel>();
+		if ((sp != null && sp.enabled == true) || scrollView.currentMomentum.magnitude > 0f)
 			Blink();
 	}
 
