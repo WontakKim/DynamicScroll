@@ -13,28 +13,26 @@ public class UIScrollBuilder : MonoBehaviour
 		section.transform.localPosition = Vector3.zero;
 		section.transform.localScale = Vector3.one;
 
-		section.onUpdateScrollSection = CalculateBounds;
-
 		listScrollSections.Add(section);
+
+		Reposition();
 	}
 
-	public void CalculateBounds()
+	public void Reposition()
 	{
 		float pos = 0f;
-
+		
 		foreach (UIScrollSection section in listScrollSections)
 		{
-			Bounds b = section.GetBounds();
-
 			if (scrollView.movement == UIScrollView.Movement.Horizontal)
 			{
 				section.transform.localPosition = new Vector3(pos, 0f, 0f);
-				pos += b.extents.x * 2;
+				pos += section.Bounds.size.x;
 			}
 			else
 			{
-				section.transform.localPosition = new Vector3(0f, pos, 0f);
-				pos += b.extents.y * 2;
+				section.transform.localPosition = new Vector3(0f, -pos, 0f);
+				pos += section.Bounds.size.y;
 			}
 		}
 	}

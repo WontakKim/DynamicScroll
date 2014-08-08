@@ -27,10 +27,14 @@ public class Example : MonoBehaviour
 	public GameObject prefabChampion;
 	public GameObject prefabItem;
 
+	public UIScrollView scrollView;
+
 	void Start()
 	{
 		CreateChampions();
 		CreateItems();
+
+		scrollView.ResetPosition();
 	}
 
 	private void CreateChampions()
@@ -39,7 +43,12 @@ public class Example : MonoBehaviour
 		go.name = "Champions";
 
 		UIScrollSection section = go.AddComponent<UIScrollSection>();
-		scrollBuilder.AddScrollSection(section);
+		section.cellWidth = 420f;
+		section.cellHeight = 60f;
+		section.arrangement = UIScrollSection.Arrangement.Vertical;
+		section.onInitContent = InitalizeChampion;
+
+		go.AddComponent<UIScrollBlinker>();
 
 		foreach (string champion in champions)
 		{
@@ -50,7 +59,9 @@ public class Example : MonoBehaviour
 			section.AddScrollContent(content);
 		}
 
-		Debug.LogWarning("Bounds : " + section.GetBounds());
+		section.CalculateBounds();
+
+		scrollBuilder.AddScrollSection(section);
 	}
 
 	private void CreateItems()
@@ -59,8 +70,14 @@ public class Example : MonoBehaviour
 		go.name = "Items";
 		
 		UIScrollSection section = go.AddComponent<UIScrollSection>();
-		scrollBuilder.AddScrollSection(section);
-		
+		section.arrangement = UIScrollSection.Arrangement.Vertical;
+		section.cellWidth = 420f;
+		section.cellHeight = 60f;
+		section.arrangement = UIScrollSection.Arrangement.Vertical;
+		section.onInitContent = InitalizeItem;
+
+		go.AddComponent<UIScrollBlinker>();
+
 		foreach (string item in items)
 		{
 			UIScrollContent content = new UIScrollContent();
@@ -69,7 +86,29 @@ public class Example : MonoBehaviour
 			
 			section.AddScrollContent(content);
 		}
-		
-		Debug.LogWarning("Bounds : " + section.GetBounds());
+
+		section.CalculateBounds();
+
+		scrollBuilder.AddScrollSection(section);
+	}
+
+	public void InitalizeChampion(string id, GameObject go)
+	{
+		Champion champion = go.GetComponent<Champion>();
+		if (champion == null)
+			return;
+
+		champion.labelName.text = id;
+		champion.spriteIcon.spriteName = id;
+	}
+
+	public void InitalizeItem(string id, GameObject go)
+	{
+		Item item = go.GetComponent<Item>();
+		if (item == null)
+			return;
+
+		item.labelName.text = id;
+		item.spriteIcon.spriteName = id;
 	}
 }
