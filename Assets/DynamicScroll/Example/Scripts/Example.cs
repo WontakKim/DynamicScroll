@@ -3,12 +3,11 @@ using System.Collections;
 
 public class Example : MonoBehaviour
 {
-	public readonly string[] champions =
+	public readonly string[] AssassinChampions = 
 	{
-		"Aatrox", "Ahri", "Akali", "Alistar", "Amumu", 
-		"Anivia", "Annie", "Ashe", "Blitzcrank", "Brand", 
-		"Braum", "Caitlyn", "Cassiopeia", "Chogath", "Corki", 
-		"Darius", "Diana", "Draven", "DrMundo", "Elise", "Evelynn",
+		"Ahri", "Akali", "Evelynn", "Fiora", "Fizz", "Irelia", "Jax", "Kassadin", "Katarina", "Khazix", "Leblanc", 
+		"LeeSin", "Malzahar", "MasterYi", "Nidalee", "Nocturne", "Pantheon", "Poppy", "Rengar", "Riven", "Shaco", 
+		"Talon", "Teemo", "Tristana", "Tryndamere", "Twitch", "Vayne", "Vi", "Xerath", "XinZhao", "Yasuo", "Zed"
 	};
 
 	public readonly string[] items = 
@@ -24,8 +23,11 @@ public class Example : MonoBehaviour
 
 	public UIScrollBuilder scrollBuilder;
 
+	public GameObject prefabTitle;
 	public GameObject prefabChampion;
 	public GameObject prefabItem;
+
+	public UIAtlas atlasAssasin;
 
 	public UIScrollView scrollView;
 
@@ -39,29 +41,57 @@ public class Example : MonoBehaviour
 
 	private void CreateChampions()
 	{
-		GameObject go = new GameObject();
-		go.name = "Champions";
-
-		UIScrollSection section = go.AddComponent<UIScrollSection>();
-		section.cellWidth = 420f;
-		section.cellHeight = 60f;
-		section.arrangement = UIScrollSection.Arrangement.Vertical;
-		section.onInitContent = InitalizeChampion;
-
-		go.AddComponent<UIScrollBlinker>();
-
-		foreach (string champion in champions)
+		// Title.
 		{
+			GameObject go = new GameObject();
+			go.name = "Title";
+
+			UIScrollSection section = go.AddComponent<UIScrollSection>();
+			section.cellWidth = 420f;
+			section.cellHeight = 60f;
+			section.arrangement = UIScrollSection.Arrangement.Vertical;
+			section.onInitContent = InitalizeTitle;
+			
+			go.AddComponent<UIScrollBlinker>();
+			
 			UIScrollContent content = new UIScrollContent();
-			content.id = champion;
-			content.prefab = prefabChampion;
+			content.id = "Assassin Champions";
+			content.prefab = prefabTitle;
 
 			section.AddScrollContent(content);
+
+			section.CalculateBounds();
+			
+			scrollBuilder.AddScrollSection(section);
 		}
 
-		section.CalculateBounds();
 
-		scrollBuilder.AddScrollSection(section);
+		// Assassin champions.
+		{
+			GameObject go = new GameObject();
+			go.name = "Champions";
+
+			UIScrollSection section = go.AddComponent<UIScrollSection>();
+			section.cellWidth = 420f;
+			section.cellHeight = 60f;
+			section.arrangement = UIScrollSection.Arrangement.Vertical;
+			section.onInitContent = InitalizeChampion;
+			
+			go.AddComponent<UIScrollBlinker>();
+			
+			foreach (string champion in AssassinChampions)
+			{
+				UIScrollContent content = new UIScrollContent();
+				content.id = "Assassin" + "_" + champion;
+				content.prefab = prefabChampion;
+				
+				section.AddScrollContent(content);
+			}
+			
+			section.CalculateBounds();
+			
+			scrollBuilder.AddScrollSection(section);
+		}
 	}
 
 	private void CreateItems()
@@ -92,14 +122,31 @@ public class Example : MonoBehaviour
 		scrollBuilder.AddScrollSection(section);
 	}
 
+	public void InitalizeTitle(string id, GameObject go)
+	{
+		Title title = go.GetComponent<Title>();
+		if (title == null)
+			return;
+
+		title.labelName.text = id;
+	}
+
 	public void InitalizeChampion(string id, GameObject go)
 	{
 		Champion champion = go.GetComponent<Champion>();
 		if (champion == null)
 			return;
 
-		champion.labelName.text = id;
-		champion.spriteIcon.spriteName = id;
+		string[] parse = id.Split('_');
+
+		string type = parse[0];
+		string name = parse[1];
+
+		if (type.Equals("Assassin") == true)
+			champion.spriteIcon.atlas = atlasAssasin;
+
+		champion.labelName.text = name;
+		champion.spriteIcon.spriteName = name;
 	}
 
 	public void InitalizeItem(string id, GameObject go)
