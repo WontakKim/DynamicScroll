@@ -9,7 +9,18 @@ public class UIScrollBlinker : MonoBehaviour
 
 	void Start()
 	{
-		scrollView = NGUITools.FindInParents<UIScrollView>(gameObject);
+		if (scrollView == null)
+			scrollView = NGUITools.FindInParents<UIScrollView>(gameObject);
+		
+		if (scrollView != null)
+		{
+			if (scrollView.horizontalScrollBar != null)
+				EventDelegate.Add(scrollView.horizontalScrollBar.onChange, Blink);
+			
+			if (scrollView.verticalScrollBar != null)
+				EventDelegate.Add(scrollView.verticalScrollBar.onChange, Blink);
+		}
+
 		Blink();
 
 		firstTime = false;
