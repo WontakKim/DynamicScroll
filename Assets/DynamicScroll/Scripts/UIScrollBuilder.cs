@@ -26,12 +26,12 @@ public class UIScrollBuilder : MonoBehaviour
 		{
 			if (scrollView.movement == UIScrollView.Movement.Horizontal)
 			{
-				section.transform.localPosition = new Vector3(pos, 0f, 0f);
+				section.transform.localPosition = new Vector3(pos - section.contentWidth / 2f, section.contentHeight / 2f, 0f);
 				pos += section.Bounds.size.x;
 			}
 			else
 			{
-				section.transform.localPosition = new Vector3(0f, -pos, 0f);
+				section.transform.localPosition = new Vector3(-(section.contentWidth / 2f), section.contentHeight / 2f - pos, 0f);
 				pos += section.Bounds.size.y;
 			}
 		}

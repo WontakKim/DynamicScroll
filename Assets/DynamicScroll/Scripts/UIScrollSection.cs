@@ -38,14 +38,16 @@ public class UIScrollSection : MonoBehaviour
 		if (string.IsNullOrEmpty(sectionId) == true)
 			sectionId = gameObject.name;
 
-		scrollView = NGUITools.FindInParents<UIScrollView>(gameObject);
+		if (scrollView == null)
+			scrollView = NGUITools.FindInParents<UIScrollView>(gameObject);
+
 		if (scrollView != null)
 		{
 			if (scrollView.horizontalScrollBar != null)
-				EventDelegate.Add (scrollView.horizontalScrollBar.onChange, Refresh);
+				EventDelegate.Add(scrollView.horizontalScrollBar.onChange, Refresh);
 
 			if (scrollView.verticalScrollBar != null)
-				EventDelegate.Add (scrollView.verticalScrollBar.onChange, Refresh);
+				EventDelegate.Add(scrollView.verticalScrollBar.onChange, Refresh);
 		}
 
 		Refresh();
@@ -74,69 +76,23 @@ public class UIScrollSection : MonoBehaviour
 			v = transform.InverseTransformPoint(v);
 			corners[i] = v;
 		}
-		
+
 		Vector3 center = Vector3.Lerp(corners[0], corners[2], 0.5f);
 
-		if (arrangement == Arrangement.Horizontal)
+		for (int i=0; i<listVirtualContents.size; i++)
 		{
-			for (int i=0; i<listVirtualContents.size; i++)
-			{
-				float min = corners[0].x - contentWidth;
-				float max = corners[2].x + contentWidth;
+			float minX = corners[0].x - contentWidth;
+			float minY = corners[0].y - contentHeight;
+			float maxX = corners[2].x + contentWidth;
+			float maxY = corners[2].y + contentHeight;
 
-				float localPos = i * contentWidth + contentWidth / 2f;
-				float distance = localPos - center.x + scrollView.panel.clipOffset.x - transform.localPosition.x;
+			Vector3 pos = GetContentPosition(i);
 
-				if (distance > min && distance < max)
-				{
-					if (dicRealContents.ContainsKey(i) == true)
-					{
-						UIScrollContent content = listVirtualContents[i];
-						if (content.onVisibleContent == null)
-							continue;
+			float distanceX = pos.x - center.x + scrollView.panel.clipOffset.x - transform.localPosition.x + contentWidth / 2f;
+			float distanceY = pos.y - center.y + scrollView.panel.clipOffset.y - transform.localPosition.y - contentHeight / 2f;
 
-						GameObject go = dicRealContents[i];
-						content.onVisibleContent(content.id, go);
-					}
-					else
-					{
-						MakeContent(i);
-					}
-
-				}
-			}
-		}
-		else
-		{
-			for (int i=0; i<listVirtualContents.size; i++)
-			{
-				if (dicRealContents.ContainsKey(i) == true)
-					continue;
-				
-				float min = corners[0].y - contentHeight;
-				float max = corners[2].y + contentHeight;
-				
-				float localPos = -(i * contentHeight + contentHeight / 2f);
-				float distance = localPos - center.y + scrollView.panel.clipOffset.y - transform.localPosition.y;
-				
-				if (distance > min && distance < max)
-				{
-					if (dicRealContents.ContainsKey(i) == true)
-					{
-						UIScrollContent content = listVirtualContents[i];
-						if (content.onVisibleContent == null)
-							continue;
-						
-						GameObject go = dicRealContents[i];
-						content.onVisibleContent(content.id, go);
-					}
-					else
-					{
-						MakeContent(i);
-					}
-					
-				}
-			}
+			if ((distanceX > minX && distanceX < maxX) && (distanceY > minY && distanceY < maxY))
+				MakeContent(i);
 		}
 	}
 
@@ -152,16 +108,7 @@ public class UIScrollSection : MonoBehaviour
 		GameObject go = NGUITools.AddChild(gameObject, content.prefab);
 		go.name = content.id;
 
-		if (arrangement == Arrangement.Horizontal)
-		{
-			float localPos = index * contentWidth + contentWidth / 2f;
-			go.transform.localPosition = new Vector3(localPos, 0f, 0f);
-		}
-		else
-		{
-			float localPos = -(index * contentHeight + contentHeight / 2f);
-			go.transform.localPosition = new Vector3(0f, localPos, 0f);
-		}
+		go.transform.localPosition = GetContentPosition(index);
 
 		dicRealContents.Add(index, go);
 
@@ -185,11 +132,11 @@ public class UIScrollSection : MonoBehaviour
 		if (arrangement == Arrangement.Horizontal)
 		{
 			x = (maxLine == 0) ? listVirtualContents.size : maxLine;
-			y = (maxLine == 0) ? 1 : Mathf.FloorToInt(listVirtualContents.size / 2f);
+			y = (maxLine == 0) ? 1 : Mathf.FloorToInt(listVirtualContents.size / maxLine);
 		}
 		else
 		{
-			x = (maxLine == 0) ? 1 : Mathf.FloorToInt(listVirtualContents.size / 2f);
+			x = (maxLine == 0) ? 1 : Mathf.FloorToInt(listVirtualContents.size / maxLine);
 			y = (maxLine == 0) ? listVirtualContents.size : maxLine;
 		}
 		
@@ -199,14 +146,32 @@ public class UIScrollSection : MonoBehaviour
 		if (widget == null)
 		{
 			widget = gameObject.AddComponent<UIWidget>();
-			
-			if (arrangement == UIScrollSection.Arrangement.Horizontal)
-				widget.pivot = UIWidget.Pivot.Left;
-			else
-				widget.pivot = UIWidget.Pivot.Top;
+			widget.pivot = UIWidget.Pivot.TopLeft;
 		}
 
 		widget.width = (int)bounds.size.x;
 		widget.height = (int)bounds.size.y;
+	}
+
+	public Vector3 GetContentPosition(int index)
+	{
+		if (listVirtualContents.size <= index)
+			return Vector3.zero;
+
+		float x;
+		float y;
+
+		if (arrangement == Arrangement.Horizontal)
+		{
+			x = ((maxLine == 0) ? index : index % maxLine) * contentWidth + contentWidth / 2f;
+			y = ((maxLine == 0) ? 0f : index / maxLine) * contentHeight + contentHeight / 2f;
+		}
+		else
+		{
+			x = ((maxLine == 0) ? 0f : index / maxLine) * contentWidth + contentWidth /2f;
+			y = ((maxLine == 0) ? index : index % maxLine) * contentHeight + contentHeight / 2f;
+		}
+
+		return new Vector3(x, -y, 0f);
 	}
 }
