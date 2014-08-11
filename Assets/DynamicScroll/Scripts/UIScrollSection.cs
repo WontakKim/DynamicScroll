@@ -16,16 +16,13 @@ public class UIScrollSection : MonoBehaviour
 
 	public Arrangement arrangement = Arrangement.Horizontal;
 
-	public int maxPerLine = 0;
+	public int maxLine = 0;
 
-	public float cellWidth = 200f;
-	public float cellHeight = 200f;
+	public float contentWidth = 200f;
+	public float contentHeight = 200f;
 
 	public delegate void OnUpdateScrollSection();
 	public OnUpdateScrollSection onUpdateScrollSection;
-	
-	public delegate void OnInitContent(string id, GameObject go);
-	public OnInitContent onInitContent;
 	
 	private Bounds bounds;
 	public Bounds Bounds
@@ -84,17 +81,29 @@ public class UIScrollSection : MonoBehaviour
 		{
 			for (int i=0; i<listVirtualContents.size; i++)
 			{
-				if (dicRealContents.ContainsKey(i) == true)
-					continue;
+				float min = corners[0].x - contentWidth;
+				float max = corners[2].x + contentWidth;
 
-				float min = corners[0].x - cellWidth;
-				float max = corners[2].x + cellWidth;
-
-				float localPos = i * cellWidth + cellWidth / 2f;
+				float localPos = i * contentWidth + contentWidth / 2f;
 				float distance = localPos - center.x + scrollView.panel.clipOffset.x - transform.localPosition.x;
 
 				if (distance > min && distance < max)
-					MakeContent(i);
+				{
+					if (dicRealContents.ContainsKey(i) == true)
+					{
+						UIScrollContent content = listVirtualContents[i];
+						if (content.onVisibleContent == null)
+							continue;
+
+						GameObject go = dicRealContents[i];
+						content.onVisibleContent(content.id, go);
+					}
+					else
+					{
+						MakeContent(i);
+					}
+
+				}
 			}
 		}
 		else
@@ -104,14 +113,29 @@ public class UIScrollSection : MonoBehaviour
 				if (dicRealContents.ContainsKey(i) == true)
 					continue;
 				
-				float min = corners[0].y - cellHeight;
-				float max = corners[2].y + cellHeight;
+				float min = corners[0].y - contentHeight;
+				float max = corners[2].y + contentHeight;
 				
-				float localPos = -(i * cellHeight + cellHeight / 2f);
+				float localPos = -(i * contentHeight + contentHeight / 2f);
 				float distance = localPos - center.y + scrollView.panel.clipOffset.y - transform.localPosition.y;
 				
 				if (distance > min && distance < max)
-					MakeContent(i);
+				{
+					if (dicRealContents.ContainsKey(i) == true)
+					{
+						UIScrollContent content = listVirtualContents[i];
+						if (content.onVisibleContent == null)
+							continue;
+						
+						GameObject go = dicRealContents[i];
+						content.onVisibleContent(content.id, go);
+					}
+					else
+					{
+						MakeContent(i);
+					}
+					
+				}
 			}
 		}
 	}
@@ -130,19 +154,19 @@ public class UIScrollSection : MonoBehaviour
 
 		if (arrangement == Arrangement.Horizontal)
 		{
-			float localPos = index * cellWidth + cellWidth / 2f;
+			float localPos = index * contentWidth + contentWidth / 2f;
 			go.transform.localPosition = new Vector3(localPos, 0f, 0f);
 		}
 		else
 		{
-			float localPos = -(index * cellHeight + cellHeight / 2f);
+			float localPos = -(index * contentHeight + contentHeight / 2f);
 			go.transform.localPosition = new Vector3(0f, localPos, 0f);
 		}
 
 		dicRealContents.Add(index, go);
 
-		if (onInitContent != null)
-			onInitContent(content.id, go);
+		if (content.onInitContent != null)
+			content.onInitContent(content.id, go);
 	}
 
 	public void AddScrollContent(UIScrollContent content)
@@ -160,16 +184,16 @@ public class UIScrollSection : MonoBehaviour
 		
 		if (arrangement == Arrangement.Horizontal)
 		{
-			x = (maxPerLine == 0) ? listVirtualContents.size : maxPerLine;
-			y = (maxPerLine == 0) ? 1 : Mathf.FloorToInt(listVirtualContents.size / 2f);
+			x = (maxLine == 0) ? listVirtualContents.size : maxLine;
+			y = (maxLine == 0) ? 1 : Mathf.FloorToInt(listVirtualContents.size / 2f);
 		}
 		else
 		{
-			x = (maxPerLine == 0) ? 1 : Mathf.FloorToInt(listVirtualContents.size / 2f);
-			y = (maxPerLine == 0) ? listVirtualContents.size : maxPerLine;
+			x = (maxLine == 0) ? 1 : Mathf.FloorToInt(listVirtualContents.size / 2f);
+			y = (maxLine == 0) ? listVirtualContents.size : maxLine;
 		}
 		
-		bounds = new Bounds(Vector3.zero, new Vector3(cellWidth * x, cellHeight * y, 0f));
+		bounds = new Bounds(Vector3.zero, new Vector3(contentWidth * x, contentHeight * y, 0f));
 
 		UIWidget widget = gameObject.GetComponent<UIWidget>();
 		if (widget == null)
