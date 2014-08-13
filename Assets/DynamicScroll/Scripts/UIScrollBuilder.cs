@@ -1,11 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class UIScrollBuilder : MonoBehaviour
 {
 	public UIScrollView scrollView;
 
-	private BetterList<UIScrollSection> listScrollSections = new BetterList<UIScrollSection>();
+	public List<UIScrollSection> listScrollSections = new List<UIScrollSection>();
+
+	void Start()
+	{
+		Reposition();
+	}
 
 	public void AddScrollSection(UIScrollSection section)
 	{
