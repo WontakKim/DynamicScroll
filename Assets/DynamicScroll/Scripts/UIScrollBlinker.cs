@@ -58,6 +58,9 @@ public class UIScrollBlinker : MonoBehaviour
 		for (int i=0; i<transform.childCount; i++)
 		{
 			Transform t = transform.GetChild(i);
+			if (UICamera.IsPressed(t.gameObject) == true)
+				continue;
+
 			Bounds b = NGUIMath.CalculateRelativeWidgetBounds(t, true);
 
 			float minX = corners[0].x - b.extents.x;
