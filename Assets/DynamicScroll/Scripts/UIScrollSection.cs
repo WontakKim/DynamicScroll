@@ -132,11 +132,13 @@ public class UIScrollSection : MonoBehaviour
 		if (arrangement == Arrangement.Horizontal)
 		{
 			x = (maxLine == 0) ? listVirtualContents.size : maxLine;
-			y = (maxLine == 0) ? 1 : Mathf.FloorToInt(listVirtualContents.size / maxLine);
+			if (listVirtualContents.size > 0)
+				y = (maxLine == 0) ? 1 : Mathf.CeilToInt(listVirtualContents.size / maxLine) + 1;
 		}
 		else
 		{
-			x = (maxLine == 0) ? 1 : Mathf.FloorToInt(listVirtualContents.size / maxLine);
+			if (listVirtualContents.size > 0)
+				x = (maxLine == 0) ? 1 : Mathf.CeilToInt(listVirtualContents.size / maxLine) + 1;
 			y = (maxLine == 0) ? listVirtualContents.size : maxLine;
 		}
 		
