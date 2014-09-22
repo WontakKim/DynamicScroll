@@ -31,7 +31,7 @@ public class UIScrollSection : MonoBehaviour
 	}
 
 	private BetterList<UIScrollContent> listVirtualContents = new BetterList<UIScrollContent>();
-	private Dictionary<int, GameObject> dicRealContents = new Dictionary<int, GameObject>();
+	private Dictionary<string, GameObject> dicRealContents = new Dictionary<string, GameObject>();
 	
 	void Start()
 	{
@@ -91,6 +91,14 @@ public class UIScrollSection : MonoBehaviour
 			float distanceX = pos.x - center.x + scrollView.panel.clipOffset.x - transform.localPosition.x + contentWidth / 2f;
 			float distanceY = pos.y - center.y + scrollView.panel.clipOffset.y - transform.localPosition.y - contentHeight / 2f;
 
+			UIScrollContent content = listVirtualContents[i];
+			if (dicRealContents.ContainsKey(content.id) == true)
+			{
+				GameObject go = dicRealContents[content.id];
+				Vector3 dst = GetContentPosition(i);
+				go.transform.localPosition = dst;
+			}
+
 			if ((distanceX > minX && distanceX < maxX) && (distanceY > minY && distanceY < maxY))
 				MakeContent(i);
 		}
@@ -101,24 +109,32 @@ public class UIScrollSection : MonoBehaviour
 		if (listVirtualContents.size <= index)
 			return;
 
-		if (dicRealContents.ContainsKey(index) == true)
+		UIScrollContent content = listVirtualContents[index];
+		if (dicRealContents.ContainsKey(content.id) == true)
 			return;
 
-		UIScrollContent content = listVirtualContents[index];
 		GameObject go = NGUITools.AddChild(gameObject, content.prefab);
 		go.name = content.id;
 
 		go.transform.localPosition = GetContentPosition(index);
 
-		dicRealContents.Add(index, go);
+		dicRealContents.Add(content.id, go);
 
 		if (content.onInitContent != null)
-			content.onInitContent(content.id, go);
+			content.onInitContent(ref content, go);
 	}
 
 	public void AddScrollContent(UIScrollContent content)
 	{
 		listVirtualContents.Add(content);
+
+		if (onUpdateScrollSection != null)
+			onUpdateScrollSection();
+	}
+
+	public void AddScrollContent(UIScrollContent content, int index)
+	{
+		listVirtualContents.Insert(index, content);
 
 		if (onUpdateScrollSection != null)
 			onUpdateScrollSection();

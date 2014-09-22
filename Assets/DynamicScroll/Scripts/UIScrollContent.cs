@@ -6,6 +6,6 @@ public class UIScrollContent
 	public string id;
 	public GameObject prefab;
 	
-	public delegate void OnInitContent(string id, GameObject go);
+	public delegate void OnInitContent(ref UIScrollContent content, GameObject go);
 	public OnInitContent onInitContent;
 }

@@ -55,7 +55,7 @@ public class SimpleScroll : MonoBehaviour
 		}
 	}
 
-	public void InitalizeChampion(string id, GameObject go)
+	public void InitalizeChampion(ref UIScrollContent content, GameObject go)
 	{
 		Champion champion = go.GetComponent<Champion>();
 		if (champion == null)
@@ -63,7 +63,7 @@ public class SimpleScroll : MonoBehaviour
 
 		champion.spriteIcon.atlas = atlas;
 
-		champion.labelName.text = id;
-		champion.spriteIcon.spriteName = id;
+		champion.labelName.text = content.id;
+		champion.spriteIcon.spriteName = content.id;
 	}
 }

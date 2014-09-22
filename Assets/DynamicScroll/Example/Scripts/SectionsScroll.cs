@@ -149,36 +149,36 @@ public class SectionsScroll : MonoBehaviour
 		}
 	}
 
-	public void InitalizeTitle(string id, GameObject go)
+	public void InitalizeTitle(ref UIScrollContent content, GameObject go)
 	{
 		Title title = go.GetComponent<Title>();
 		if (title == null)
 			return;
 
-		title.labelName.text = id;
+		title.labelName.text = content.id;
 	}
 
-	public void InitalizeChampion(string id, GameObject go)
+	public void InitalizeChampion(ref UIScrollContent content, GameObject go)
 	{
 		Champion champion = go.GetComponent<Champion>();
 		if (champion == null)
 			return;
 
-		champion.labelName.text = id;
+		champion.labelName.text = content.id;
 
 		champion.spriteIcon.atlas = atlasChampion;
-		champion.spriteIcon.spriteName = id;
+		champion.spriteIcon.spriteName = content.id;
 	}
 
-	public void InitalizeItem(string id, GameObject go)
+	public void InitalizeItem(ref UIScrollContent content, GameObject go)
 	{
 		Item item = go.GetComponent<Item>();
 		if (item == null)
 			return;
 
-		item.labelName.text = id;
+		item.labelName.text = content.id;
 		
 		item.spriteIcon.atlas = atlasItem;
-		item.spriteIcon.spriteName = id;
+		item.spriteIcon.spriteName = content.id;
 	}
 }
