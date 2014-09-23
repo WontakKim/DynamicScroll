@@ -11,7 +11,8 @@ public class SimpleScroll : MonoBehaviour
 	};
 
 	public UIScrollBuilder scrollBuilder;
-
+	public UIScrollSection scrollSection;
+	
 	public GameObject prefabChampion;
 
 	public UIAtlas atlas;
@@ -29,16 +30,6 @@ public class SimpleScroll : MonoBehaviour
 	{
 		// Champions.
 		{
-			GameObject go = new GameObject();
-			go.name = "Champions";
-
-			UIScrollSection section = go.AddComponent<UIScrollSection>();
-			section.contentWidth = 420f;
-			section.contentHeight = 60f;
-			section.arrangement = UIScrollSection.Arrangement.Vertical;
-			
-			go.AddComponent<UIScrollBlinker>();
-			
 			foreach (string champion in Champions)
 			{
 				UIScrollContent content = new UIScrollContent();
@@ -46,12 +37,10 @@ public class SimpleScroll : MonoBehaviour
 				content.prefab = prefabChampion;
 				content.onInitContent = InitalizeChampion;
 
-				section.AddScrollContent(content);
+				scrollSection.AddScrollContent(content);
 			}
 			
-			section.CalculateBounds();
-			
-			scrollBuilder.AddScrollSection(section);
+			scrollSection.CalculateBounds();
 		}
 	}
 
