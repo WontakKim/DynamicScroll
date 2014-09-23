@@ -126,7 +126,12 @@ public class UIScrollSection : MonoBehaviour
 
 	public void AddScrollContent(UIScrollContent content)
 	{
+		if (content == null)
+			return;
+
 		listVirtualContents.Add(content);
+
+		CalculateBounds();
 
 		if (onUpdateScrollSection != null)
 			onUpdateScrollSection();
@@ -135,6 +140,50 @@ public class UIScrollSection : MonoBehaviour
 	public void AddScrollContent(UIScrollContent content, int index)
 	{
 		listVirtualContents.Insert(index, content);
+
+		CalculateBounds();
+
+		if (onUpdateScrollSection != null)
+			onUpdateScrollSection();
+	}
+
+	public void RemoveScrollContent(UIScrollContent content)
+	{
+		if (content == null)
+			return;
+
+		string key = content.id;
+		if (dicRealContents.ContainsKey(key) == true)
+		{
+			GameObject go = dicRealContents[key];
+			dicRealContents.Remove(key);
+			GameObject.Destroy(go);
+		}
+
+		listVirtualContents.Remove(content);
+
+		CalculateBounds();
+
+		if (onUpdateScrollSection != null)
+			onUpdateScrollSection();
+	}
+
+	public void RemoveScrollContent(int index)
+	{
+		if (listVirtualContents.size <= index)
+			return;
+
+		string key = listVirtualContents[index].id;
+		if (dicRealContents.ContainsKey(key) == true)
+		{
+			GameObject go = dicRealContents[key];
+			dicRealContents.Remove(key);
+			GameObject.Destroy(go);
+		}
+
+		listVirtualContents.RemoveAt(index);
+
+		CalculateBounds();
 
 		if (onUpdateScrollSection != null)
 			onUpdateScrollSection();
