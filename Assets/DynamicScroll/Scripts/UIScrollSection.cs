@@ -21,6 +21,8 @@ public class UIScrollSection : MonoBehaviour
 	public float contentWidth = 200f;
 	public float contentHeight = 200f;
 
+	public bool automaticallyMakeBounds = true;
+
 	public delegate void OnUpdateScrollSection();
 	public OnUpdateScrollSection onUpdateScrollSection;
 	
@@ -117,6 +119,16 @@ public class UIScrollSection : MonoBehaviour
 		go.name = content.id;
 
 		go.transform.localPosition = GetContentPosition(index);
+
+		if (automaticallyMakeBounds == true)
+		{
+			UIWidget widget = go.GetComponent<UIWidget>();
+			if (widget == null)
+				widget = go.AddComponent<UIWidget>();
+
+			widget.width = (int)contentWidth;
+			widget.height = (int)contentHeight;
+		}
 
 		dicRealContents.Add(content.id, go);
 
