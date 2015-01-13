@@ -204,6 +204,20 @@ public class UIScrollSection : MonoBehaviour
 			onUpdateScrollSection();
 	}
 
+	public bool IsExistScrollContent(string id)
+	{
+		if (string.IsNullOrEmpty(id) == true)
+			return false;
+
+		for (int i=0; i<listVirtualContents.size; i++)
+		{
+			if (id.Equals(listVirtualContents[i].id) == true)
+				return true;
+		}
+
+		return false;
+	}
+
 	public void CalculateBounds()
 	{
 		int x = 0;
