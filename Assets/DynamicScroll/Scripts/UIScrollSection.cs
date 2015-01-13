@@ -147,6 +147,21 @@ public class UIScrollSection : MonoBehaviour
 			onUpdateScrollSection();
 	}
 
+	public void RemoveScrollContent(string id)
+	{
+		if (string.IsNullOrEmpty(id) == true)
+			return;
+
+		for (int i=0; i<listVirtualContents.size; i++)
+		{
+			if (id.Equals(listVirtualContents[i].id) == true)
+			{
+				RemoveScrollContent(listVirtualContents[i]);
+				return;
+			}
+		}
+	}
+
 	public void RemoveScrollContent(UIScrollContent content)
 	{
 		if (content == null)
