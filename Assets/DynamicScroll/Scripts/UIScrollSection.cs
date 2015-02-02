@@ -239,12 +239,12 @@ public class UIScrollSection : MonoBehaviour
 		{
 			x = (maxLine == 0) ? listVirtualContents.size : maxLine;
 			if (listVirtualContents.size > 0)
-				y = (maxLine == 0) ? 1 : Mathf.CeilToInt(listVirtualContents.size / maxLine) + 1;
+				y = (maxLine == 0) ? 1 : Mathf.CeilToInt((float)listVirtualContents.size / (float)maxLine);
 		}
 		else
 		{
 			if (listVirtualContents.size > 0)
-				x = (maxLine == 0) ? 1 : Mathf.CeilToInt(listVirtualContents.size / maxLine) + 1;
+				x = (maxLine == 0) ? 1 : Mathf.CeilToInt((float)listVirtualContents.size / (float)maxLine);
 			y = (maxLine == 0) ? listVirtualContents.size : maxLine;
 		}
 		
