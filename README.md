@@ -1,14 +1,13 @@
 # Dynamic Scroll for NGUI
-=============
 
 Dynamic Scroll fixes the problem of existing NGUI Scroll that the performance slows down when dealing with a lot of scroll contents.
 
-## Requirements
+# Requirements
 
 * Unity 4+ Pro
 * NGUI 3+
 
-## Class
+# Class
 
 * UIScrollBlinker
 > **Note:** It functions to make child game object invisible when child game object is located out of viewing sector.
@@ -22,6 +21,6 @@ Dynamic Scroll fixes the problem of existing NGUI Scroll that the performance sl
 * UIScrollBlinker
 > **Note:** Virtual scroll data. (the minimum unit)
 
-## Demostration
+# Demostration
 
 http://youtu.be/XXrNReUjYz0
