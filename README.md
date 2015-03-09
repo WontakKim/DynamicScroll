@@ -23,8 +23,8 @@ Dynamic Scroll fixes the problem of existing NGUI Scroll that the performance sl
 
 # Example
 
-Example - Simple Scroll.unity : It is the example of single section.
-Example - Sections Scroll.unity : It is the example of multiple section.
+* Example - Simple Scroll.unity : It is the example of single section.
+* Example - Sections Scroll.unity : It is the example of multiple section.
 
 # Demostration
 Here is a screenshot of 'Dynamic Scroll for NGUI' demo running on Unity Editor.
