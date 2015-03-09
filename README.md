@@ -9,17 +9,22 @@ Dynamic Scroll fixes the problem of existing NGUI Scroll that the performance sl
 
 # Class
 
-* UIScrollBlinker
+* UIScrollBlinker.cs
 > **Note:** It functions to make child game object invisible when child game object is located out of viewing sector.
 
-* UIScrollBuilder
+* UIScrollBuilder.cs
 > **Note:** It defines scroll-size and manages sub-sections.
 
-* UIScrollBlinker
+* UIScrollBlinker.cs
 > **Note:** It generates and manage virtual scroll contents.
 
-* UIScrollBlinker
+* UIScrollBlinker.cs
 > **Note:** Virtual scroll data. (the minimum unit)
+
+# Example
+
+Example - Simple Scroll.unity : It is the example of single section.
+Example - Sections Scroll.unity : It is the example of multiple section.
 
 # Demostration
 Here is a screenshot of 'Dynamic Scroll for NGUI' demo running on Unity Editor.
