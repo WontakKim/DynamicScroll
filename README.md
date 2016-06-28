@@ -29,6 +29,6 @@ Dynamic Scroll fixes the problem of existing NGUI Scroll that the performance sl
 # Demostration
 Here is a screenshot of 'Dynamic Scroll for NGUI' demo running on Unity Editor.
 
-![Editor](https://lh4.googleusercontent.com/-FVypVu3MyAw/VPzzSqa9qQI/AAAAAAAABKM/-6H9XryPvI4/s0/screenshot.png)
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/XXrNReUjYz0/0.jpg)](http://www.youtube.com/watch?v=XXrNReUjYz0 "Dynamic scroll for NGUI")
 
 Youtube Link : http://youtu.be/XXrNReUjYz0
