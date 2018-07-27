@@ -15,10 +15,10 @@ Dynamic Scroll fixes the problem of existing NGUI Scroll that the performance sl
 * UIScrollBuilder.cs
 > **Note:** It defines scroll-size and manages sub-sections.
 
-* UIScrollBlinker.cs
+* UIScrollSection.cs
 > **Note:** It generates and manage virtual scroll contents.
 
-* UIScrollBlinker.cs
+* UIScrollContent.cs
 > **Note:** Virtual scroll data. (the minimum unit)
 
 # Example
